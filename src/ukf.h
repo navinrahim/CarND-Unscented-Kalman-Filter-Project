@@ -54,6 +54,12 @@ public:
 
   ///* Radar measurement noise standard deviation radius change in m/s
   double std_radrd_ ;
+  
+  ///* Radar measurement covariance matrix
+  MatrixXd R_radar_;
+  
+  ///* Laser measurement covariance matrix
+  MatrixXd R_laser_;
 
   ///* Weights of sigma points
   VectorXd weights_;
@@ -63,10 +69,18 @@ public:
 
   ///* Augmented state dimension
   int n_aug_;
+  
+  ///* No of sigma points to be generated
+  int no_of_sigma_points_;
 
   ///* Sigma point spreading parameter
   double lambda_;
-
+  
+  ///* Augmented state vector: [pos1 pos2 vel_abs yaw_angle yaw_rate mu_a mu_psi_dot_dot] in SI units and rad
+  VectorXd x_aug_;
+  
+  ///* Augmented state covariance matrix
+  MatrixXd P_aug_;
 
   /**
    * Constructor
