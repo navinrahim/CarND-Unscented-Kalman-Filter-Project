@@ -60,6 +60,9 @@ public:
   
   ///* Laser measurement covariance matrix
   MatrixXd R_laser_;
+  
+  ///* Laser measurement matrix
+  MatrixXd H_laser_;
 
   ///* Weights of sigma points
   VectorXd weights_;
