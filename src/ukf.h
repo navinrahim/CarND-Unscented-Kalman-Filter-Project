@@ -84,6 +84,12 @@ public:
   
   ///* Augmented state covariance matrix
   MatrixXd P_aug_;
+  
+  ///* Variable to store NIS of radar
+  float NIS_radar_;
+  
+  ///* Variable to store NIS of lidar
+  float NIS_laser_;
 
   /**
    * Constructor

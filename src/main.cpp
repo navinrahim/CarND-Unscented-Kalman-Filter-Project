@@ -4,8 +4,10 @@
 #include <math.h>
 #include "ukf.h"
 #include "tools.h"
+#include <fstream>
 
 using namespace std;
+using std::ofstream; 
 
 // for convenience
 using json = nlohmann::json;
@@ -32,13 +34,22 @@ int main()
 
   // Create a Kalman Filter instance
   UKF ukf;
+  
+  //Opening file to write output values
+  ofstream outdata;
+  int open_flag = 0;
+  outdata.open("../obj_pose-laser-radar-ukf-output.txt", std::ofstream::out | std::ofstream::trunc);
+  if( !outdata ) { // file couldn't be opened
+      cerr << "Error: file could not be opened" << endl;
+      open_flag = 1;
+}
 
   // used to compute the RMSE later
   Tools tools;
   vector<VectorXd> estimations;
   vector<VectorXd> ground_truth;
 
-  h.onMessage([&ukf,&tools,&estimations,&ground_truth](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+  h.onMessage([&ukf,&tools,&estimations,&ground_truth,&outdata](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
@@ -106,7 +117,10 @@ int main()
     	  ground_truth.push_back(gt_values);
           
           //Call ProcessMeasurment(meas_package) for Kalman filter
-    	  ukf.ProcessMeasurement(meas_package);    	  
+    	  ukf.ProcessMeasurement(meas_package);   
+		  
+		  outdata << ukf.NIS_radar_ << "\t" ;
+		  outdata << ukf.NIS_laser_ << "\n" ;
 
     	  //Push the current estimated x,y positon from the Kalman filter's state vector
 
@@ -185,6 +199,7 @@ int main()
     return -1;
   }
   h.run();
+  outdata.close();
 }
 
 
